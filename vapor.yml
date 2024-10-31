@@ -1,0 +1,13 @@
+id: 12440
+name: teamviewer-api
+environments:
+    production:
+        memory: 512
+        cli-memory: 512
+        runtime: 'php-8.2:al2'
+        domain: teamviewer-api.iposg.com
+        balancer: iposg-balancer
+        network: vapor-network-1589891155
+        build:
+            - 'COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev'
+            - 'php artisan event:cache'

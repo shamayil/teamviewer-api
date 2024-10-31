@@ -1,0 +1,14 @@
+image: shamayil/vapor-php-fpm:8.2.1-cli
+pipelines:
+  branches:
+    master:
+      - step:
+          name: Deploy Application to Production
+          deployment: production
+          caches:
+            - composer
+          script:
+            - COMPOSER_MIRROR_PATH_REPOS=1 composer install --prefer-dist --no-ansi --no-interaction --no-progress --optimize-autoloader --no-dev
+            - composer global require laravel/vapor-cli --update-with-dependencies
+            - COMMIT_MESSAGE=`git log --format=%B -n 1 $BITBUCKET_COMMIT`
+            - /root/.config/composer/vendor/bin/vapor deploy production --commit="${BITBUCKET_COMMIT}" --message="${COMMIT_MESSAGE}"
